@@ -7,6 +7,7 @@
  *
  * Version: 0.3
  * Date: 2026-05-10
+ * Credits: Engkq
  */
 
 #define EDLG_MAX_REGS       256
