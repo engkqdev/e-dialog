@@ -80,7 +80,8 @@ stock EDialog_Unregister(dialogid)
     if (idx == -1) return 0;
     g_EDialog_RegCount--;
     g_EDialog_Regs[idx] = g_EDialog_Regs[g_EDialog_RegCount];
-    strcpy(g_EDialog_HeaderTemplate[idx], g_EDialog_HeaderTemplate[g_EDialog_RegCount], sizeof g_EDialog_HeaderTemplate[idx]);
+    // gunakan strmid alih-alih strcpy untuk kompatibilitas compiler
+    strmid(g_EDialog_HeaderTemplate[idx], g_EDialog_HeaderTemplate[g_EDialog_RegCount], 0, sizeof g_EDialog_HeaderTemplate[idx]);
     return 1;
 }
 
@@ -315,10 +316,11 @@ stock EDialog_ShowNextQueued(playerid)
     for (i = 1; i < count; i++) {
         g_EDialog_Queue_DialogId[playerid][i-1] = g_EDialog_Queue_DialogId[playerid][i];
         g_EDialog_Queue_Style[playerid][i-1] = g_EDialog_Queue_Style[playerid][i];
-        strcpy(g_EDialog_Queue_Title[playerid][i-1], g_EDialog_Queue_Title[playerid][i], sizeof g_EDialog_Queue_Title[playerid][i-1]);
-        strcpy(g_EDialog_Queue_Info[playerid][i-1], g_EDialog_Queue_Info[playerid][i], sizeof g_EDialog_Queue_Info[playerid][i-1]);
-        strcpy(g_EDialog_Queue_Btn1[playerid][i-1], g_EDialog_Queue_Btn1[playerid][i], sizeof g_EDialog_Queue_Btn1[playerid][i-1]);
-        strcpy(g_EDialog_Queue_Btn2[playerid][i-1], g_EDialog_Queue_Btn2[playerid][i], sizeof g_EDialog_Queue_Btn2[playerid][i-1]);
+        // gunakan strmid untuk menyalin string antar slot
+        strmid(g_EDialog_Queue_Title[playerid][i-1], g_EDialog_Queue_Title[playerid][i], 0, sizeof g_EDialog_Queue_Title[playerid][i-1]);
+        strmid(g_EDialog_Queue_Info[playerid][i-1], g_EDialog_Queue_Info[playerid][i], 0, sizeof g_EDialog_Queue_Info[playerid][i-1]);
+        strmid(g_EDialog_Queue_Btn1[playerid][i-1], g_EDialog_Queue_Btn1[playerid][i], 0, sizeof g_EDialog_Queue_Btn1[playerid][i-1]);
+        strmid(g_EDialog_Queue_Btn2[playerid][i-1], g_EDialog_Queue_Btn2[playerid][i], 0, sizeof g_EDialog_Queue_Btn2[playerid][i-1]);
     }
 
     g_EDialog_Queue_Title[playerid][count-1][0] = '\0';
