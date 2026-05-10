@@ -55,5 +55,3 @@ Files included in this release
 - include/E-Dialog.inc (v0.4)
 - example/example.pwn (demo)
 - README.md / RELEASES/v0.4.md
-
-Need a GitHub release tag or LICENSE added? Reply: "Add release v0.4 and MIT license" and I will create them for you.
