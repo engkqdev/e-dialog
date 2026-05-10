@@ -1,16 +1,16 @@
 /*
- * E-Dialog.inc v0.4 (stable)
+ * E-Dialog.inc v0.4 (stabil)
  * Path: include/E-Dialog.inc
  *
- * Goals for v0.4:
- * - Make common operations easier with simple wrapper functions
- * - Keep API backward compatible with v0.3
- * - Provide clear, documented helpers for message/input/list dialogs
- * - Keep source readable (spaces, no tab indentation)
+ * Tujuan v0.4:
+ * - Mempermudah operasi umum dengan fungsi pembungkus sederhana
+ * - Tetap kompatibel dengan v0.3
+ * - Menyediakan helper yang jelas untuk dialog message/input/list
+ * - Source mudah dibaca (spasi, tanpa tab)
  *
- * Version: 0.4
- * Date: 2026-05-10
- * Author: engkq
+ * Versi: 0.4
+ * Tanggal: 2026-05-10
+ * Penulis: engkq
  */
 
 #define EDLG_MAX_REGS       256
@@ -25,9 +25,9 @@ new g_EDialog_Regs[EDLG_MAX_REGS];
 new g_EDialog_RegCount = 0;
 new g_EDialog_HeaderTemplate[EDLG_MAX_REGS][EDLG_HDR_MAXLEN];
 new g_EDialog_GlobalHeader[EDLG_HDR_MAXLEN];
-new g_EDialog_AutoRegister = 1 // default: on (easier to use)
+new g_EDialog_AutoRegister = 1; // default: on (lebih mudah digunakan)
 
-// Queue per-player (same as v0.3)
+// Antrian per-pemain
 #define EDLG_MAX_PLAYERS    5000
 #define EDLG_MAX_QUEUE      12
 #define EDLG_MAX_TITLE      128
@@ -42,18 +42,18 @@ new g_EDialog_Queue_Info[EDLG_MAX_PLAYERS][EDLG_MAX_QUEUE][EDLG_MAX_INFO];
 new g_EDialog_Queue_Btn1[EDLG_MAX_PLAYERS][EDLG_MAX_QUEUE][EDLG_MAX_BTN];
 new g_EDialog_Queue_Btn2[EDLG_MAX_PLAYERS][EDLG_MAX_QUEUE][EDLG_MAX_BTN];
 
-// ID generator
+// Penghasil ID unik
 new g_EDialog_IdCounter = 1000;
 
-// Simple in-memory log (small ring)
+// Logger sederhana (in-memory ring buffer)
 #define EDLG_LOG_SIZE 128
 new g_EDialog_LogIndex = 0;
 new g_EDialog_LogMessages[EDLG_LOG_SIZE][128];
 
-// forward that gamemode should implement to receive dialog callbacks
+// forward yang harus diimplementasikan gamemode untuk menerima event dialog
 forward EDialog_OnResponse(playerid, dialogid, response, listitem, inputtext[]);
 
-// ---------------- Utilities ----------------
+// ---------------- Utilitas ----------------
 stock _EDialog_FindIndexById(dialogid)
 {
     new i;
@@ -63,7 +63,7 @@ stock _EDialog_FindIndexById(dialogid)
     return -1;
 }
 
-// ---------------- Registration ----------------
+// ---------------- Registrasi ----------------
 stock EDialog_Register(dialogid)
 {
     if (_EDialog_FindIndexById(dialogid) != -1) return 0;
@@ -95,7 +95,7 @@ stock EDialog_SetAutoRegister(state)
     return 1;
 }
 
-// ---------------- Header management ----------------
+// ---------------- Manajemen header ----------------
 stock EDialog_SetGlobalHeader(template[])
 {
     strmid(g_EDialog_GlobalHeader, template, 0, sizeof g_EDialog_GlobalHeader);
@@ -145,7 +145,7 @@ stock EDialog_FormatHeader(out[], outlen, title[], dialogid)
     return 1;
 }
 
-// ---------------- Core show wrapper ----------------
+// ---------------- Fungsi utama tampilan ----------------
 public EDialog_Show(playerid, dialogid, style, title[], info[], button1[], button2[])
 {
     if (!EDialog_IsRegistered(dialogid) && g_EDialog_AutoRegister) {
@@ -158,16 +158,14 @@ public EDialog_Show(playerid, dialogid, style, title[], info[], button1[], butto
     return 1;
 }
 
-// ---------------- Simple helpers (v0.4) ----------------
-// These make common dialog tasks 1-call simple for convenience.
-
-// Quick message box (OK / Cancel)
+// ---------------- Helper sederhana (v0.4) ----------------
+// Kotak pesan cepat (OK / Cancel)
 stock EDialog_ShowSimple(playerid, dialogid, title[], message[], okButton[] = "OK", cancelButton[] = "Cancel")
 {
     return EDialog_Show(playerid, dialogid, 0, title, message, okButton, cancelButton);
 }
 
-// Quick input prompt: defaultText optional (pass "" if none)
+// Prompt input cepat: defaultText opsional
 stock EDialog_ShowInput(playerid, dialogid, title[], prompt[], defaultText[], saveButton[] = "Save", cancelButton[] = "Cancel")
 {
     new info[EDLG_MAX_INFO];
@@ -176,7 +174,7 @@ stock EDialog_ShowInput(playerid, dialogid, title[], prompt[], defaultText[], sa
     return EDialog_Show(playerid, dialogid, 2, title, info, saveButton, cancelButton);
 }
 
-// Quick list builder from a header and rows string (rows use '\n' between rows and '\t' between columns)
+// Tampilkan list cepat (columnHeader & rows menggunakan '\t' dan '\n')
 stock EDialog_ShowList(playerid, dialogid, title[], columnHeader[], rows[])
 {
     new info[EDLG_MAX_INFO];
@@ -184,7 +182,7 @@ stock EDialog_ShowList(playerid, dialogid, title[], columnHeader[], rows[])
     return EDialog_Show(playerid, dialogid, 1, title, info, "Close", "More");
 }
 
-// Shortcut: show if free, otherwise queue
+// Tampilkan atau antri jika pemain sibuk
 stock EDialog_ShowOrQueue(playerid, dialogid, style, title[], info[], button1[], button2[])
 {
     if (EDialog_GetQueuedCount(playerid) == 0) {
@@ -193,7 +191,7 @@ stock EDialog_ShowOrQueue(playerid, dialogid, style, title[], info[], button1[],
     return EDialog_QueueForPlayer(playerid, dialogid, style, title, info, button1, button2);
 }
 
-// ---------------- Helpers (v0.3 compatibility & improvements) ----------------
+// ---------------- Helper lain ----------------
 stock EDialog_MakeListInfo(out[], outlen, columnHeader[], rows[])
 {
     new tmp[EDLG_MAX_BUFFER];
@@ -222,11 +220,10 @@ stock EDialog_SanitizeInput(input[], out[], outlen)
 
 stock EDialog_FormatColumns(out[], outlen, row[], widths[], colcount)
 {
-    // Simple implementation preserved from v0.3
     new buf[EDLG_MAX_BUFFER];
     buf[0] = '\0';
     new col[256];
-    new i = 0, p = 0, w, k, len, rpos = 0;
+    new i = 0, w, k, len, rpos = 0;
 
     while (i < colcount) {
         k = 0;
@@ -277,7 +274,7 @@ stock EDialog_LogEvent(message[])
     return 1;
 }
 
-// ---------------- Queueing (unchanged, improved limits) ----------------
+// ---------------- Queueing ----------------
 stock EDialog_QueueForPlayer(playerid, dialogid, style, title[], info[], button1[], button2[])
 {
     if (playerid < 0 || playerid >= EDLG_MAX_PLAYERS) return 0;
@@ -345,7 +342,7 @@ stock EDialog_GetQueuedCount(playerid)
     return g_EDialog_QueueCount[playerid];
 }
 
-// ---------------- Intercept and forward responses ----------------
+// ---------------- Intercept dan forward response ----------------
 public OnPlayerDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
     if (EDialog_IsRegistered(dialogid)) {
