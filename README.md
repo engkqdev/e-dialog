@@ -2,7 +2,7 @@
 
 E-Dialog v0.4 memfokuskan pada kemudahan penggunaan: auto-register default ON, fungsi pembungkus untuk tipe dialog umum, dan dokumentasi ringkas agar integrasi lebih cepat.
 
-Penulis: engkq
+Author : engkq
 
 Fitur utama
 - Helper sederhana: EDialog_ShowSimple, EDialog_ShowInput, EDialog_ShowList
