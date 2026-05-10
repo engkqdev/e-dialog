@@ -87,6 +87,3 @@ Contoh singkat (lihat `example/example.pwn`):
 
 Releases:
 - v0.3 (stable): initial stable release with queueing, auto-padding helpers, sanitize, ID generator, and example.
-
-Lisensi:
-Tambahkan file LICENSE jika Anda ingin menyertakan lisensi (misal MIT). Saat ini repository tidak menyertakan file LICENSE.
